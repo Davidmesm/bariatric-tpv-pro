@@ -40,6 +40,15 @@ const SalePage = () => {
         return `${client ? `${client.firstName} ${client.lastName}` : ""}`
     }
 
+    const getDistributor = (params) => {
+        let client = clientData.find(item => item.id === params.row.distributorId)
+        if(client) {
+            return `${client ? `${client.firstName} ${client.lastName}` : ""}`}
+        else {
+            return getClient(params)
+        }
+    }
+
     const getVendor = (params) => {
         let vendor = vendorData.find(item => item.id === params.row.vendorId)
 
@@ -132,11 +141,19 @@ const SalePage = () => {
         },
         {
             field: "buyer",
-            headerName: "Distribuidor/Cliente Independiente",
+            headerName: "Comprador",
             width: 300,
             valueGetter: getBuyer,
             sortComparator: (v1, v2, cellParam1, cellParam2) =>
                 getBuyer(cellParam1).localeCompare(getBuyer(cellParam2))
+        },
+        {
+            field: "distributor",
+            headerName: "Distribuidor/Cliente Independiente",
+            width: 300,
+            valueGetter: getDistributor,
+            sortComparator: (v1, v2, cellParam1, cellParam2) =>
+                getDistributor(cellParam1).localeCompare(getDistributor(cellParam2))
         },
         {
             field: "vendorCom",

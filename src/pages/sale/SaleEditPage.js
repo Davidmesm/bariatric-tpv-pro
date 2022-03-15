@@ -828,12 +828,12 @@ const SaleEditPage = () => {
         bankAccountData, setValue, createAlert, history, saleId])
 
     useEffect(() => {
-        if (addressIndex !== -1 && watchClientId) {
+        if (addressIndex > -1 && watchClientId) {
             if (watchClientId.addresses[addressIndex]) {
                 let address = watchClientId.addresses[addressIndex]
-                let value = { value: addressIndex.toString(), label: address.name, render: address.name, ...address }
+                let value = { value: addressIndex, label: address.name, render: address.name, ...address }
                 setValue("addressIndex", value)
-                setAddressIndex(-1)
+                setAddressIndex(-2)
             }
         }
     }, [addressIndex, watchClientId, setValue])
