@@ -54,7 +54,6 @@ const GeneralInfoForm = (props) => {
         else {
             setBuyerData([])
             setValue("buyerId", "")
-            setValue("addressIndex", "")
         }
     }, [watchClientId, setBuyerData, clientData, setValue])
 
@@ -78,7 +77,7 @@ const GeneralInfoForm = (props) => {
             }
         }
 
-        if (watchClientId && addressOptions.length > 0) {
+        if (watchClientId && (addressOptions.length > 0 && !watchAddressIndex)) {
             let address = addressOptions.find(a => a.value === watchClientId.mainAddress)
 
             if (address) {
