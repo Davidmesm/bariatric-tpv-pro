@@ -1,18 +1,25 @@
-import { Box } from "@material-ui/core"
+import { Box, IconButton } from "@material-ui/core"
 import { DataGrid } from "@material-ui/data-grid"
+import { Delete, Edit } from "@material-ui/icons"
 import React, { useEffect, useState } from "react"
 import { trackPromise } from "react-promise-tracker"
 import { usePromiseTracker } from "react-promise-tracker"
-import { useRouteMatch } from "react-router"
+import { useHistory, useRouteMatch } from "react-router"
+import DeleteDialog from "../../../components/dialogs/DeleteDialog"
 import Loading from "../../../components/Loading"
+import { useAlerts } from "../../../contexts/AlertsContext"
 import { db } from "../../../firebase"
 import PageToolBar from "../../components/PageToolBar"
 
 const VendorCommission = () => {
-    let { url } = useRouteMatch();
-    const { promiseInProgress } = usePromiseTracker();
+    const history = useHistory()
+    let { url } = useRouteMatch()
+    const { promiseInProgress } = usePromiseTracker()
+    const { createAlert } = useAlerts()
 
     const [vendorCommissionData, setVendorCommissionData] = useState([])
+    const [openDialog, setOpenDialog] = useState(false)
+    const [idToDelete, setIdToDelete] = useState()
     const [selectedCommission, setSelectedCommission] = useState([])
     const [payment, setPayment] = useState(0)
     const [exportData, setExportData] = useState([])
@@ -24,7 +31,63 @@ const VendorCommission = () => {
         return `${vendor ? `${vendor.firstName} ${vendor.lastName}` : ""}`
     }
 
+    const addFunction = (e) => {
+        history.push("vendor/add")
+    }
+
+    const handleEditClick = (id) => history.push(`${url}/edit/${id}`)
+
+    const handleDeleteClick = (id) => {
+        setIdToDelete(id)
+        setOpenDialog(true)
+    }
+
+    const confirmDelete = () => {
+        db.collection('vendorCommission')
+        .doc(idToDelete)
+        .delete()
+        .then(() => {
+            createAlert("success", "Ajuste eliminado.")
+            console.log("Deleted vendorCommission document: ", idToDelete);
+        })
+        .catch((error) => {
+            createAlert("error", "Error al eliminar el ajuste")
+            console.error("Error deleting vendorCommission document: ", error);
+        });
+
+        setOpenDialog(false)
+    }
+
     const columns = [
+        {
+            field: "id",
+            headerName: " ",
+            width: 140,
+            renderCell: (params) => {
+
+                if(params.row.concept === 'Ajuste') {
+                    return (
+                    <Box>
+                        <IconButton
+                            aria-label="editar"
+                            onClick={() => handleEditClick(params.value)}
+                            color="primary">
+                            <Edit />
+                        </IconButton>
+                        <IconButton
+                            aria-label="eliminar"
+                            onClick={() => handleDeleteClick(params.value)}
+                            color="secondary">
+                            <Delete />
+                        </IconButton>
+                    </Box>)
+                }
+                else {
+                    return (<></>)
+                }
+                
+            }
+        },
         { field: "date", headerName: "Fecha", width: 120, type: "date" },
         {
             field: "vendor",
@@ -35,13 +98,14 @@ const VendorCommission = () => {
                 getVendor(cellParam1).localeCompare(getVendor(cellParam2))
         },
         { field: "saleId", headerName: "Venta", width: 250 },
-        { field: "concept", headerName: "Concepto", width: 180 },
+        { field: "concept", headerName: "Concepto", width: 200 },
         {
             field: "commission",
             headerName: "Comisión",
             width: 200, valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`
         },
-        { field: "status", headerName: "Estado", width: 150 }
+        { field: "status", headerName: "Estado", width: 150 },
+        { field: "comments", headerName: "Comentarios", width: 200 }
     ]
 
     const exportHeaders = [
@@ -51,7 +115,8 @@ const VendorCommission = () => {
         { label: "Venta", key: "saleId" },
         { label: "Concepto", key: "concept" },
         { label: "Comisión", key: "commission" },
-        { label: "Estatus", key: "status" }]
+        { label: "Estatus", key: "status" },
+        { label: "Comentarios", key: "comments" }]
 
     const updateSelectionInfo = (selectedIds) => {
         const selectedRowData = vendorCommissionData.filter((row) =>
@@ -133,7 +198,7 @@ const VendorCommission = () => {
             <PageToolBar
                 parent={`${url}`}
                 title="Comisión Vendedor"
-                disableAddButton={true}
+                addFunction={addFunction}
                 data={exportData}
                 headers={exportHeaders} />
             <Box height="400px">
@@ -141,6 +206,7 @@ const VendorCommission = () => {
                     <Box flexGrow={1}>
                         <DataGrid
                             checkboxSelection={true}
+                            disableSelectionOnClick
                             isRowSelectable={(params) => params.row.status === "Pendiente"}
                             rows={vendorCommissionData}
                             onSelectionModelChange={(newSelection) => {
@@ -150,6 +216,12 @@ const VendorCommission = () => {
                     </Box>
                 </Box>
             </Box>
+            <DeleteDialog
+                setOpenDialog={setOpenDialog}
+                openDialog={openDialog}
+                idToDelete={idToDelete}
+                entityTitle="Comisión de Vendedor"
+                confirmDeleteClick={confirmDelete} />
         </Box>
     )
 }

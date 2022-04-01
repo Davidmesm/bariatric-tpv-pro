@@ -24,6 +24,9 @@ import NutritionistEditPage from "./pages/nutritionist/NutritionistEditPage"
 import SurgeryPage from "./pages/surgery/SurgeryPage"
 import SurgeryAddPage from "./pages/surgery/SurgeryAddPage"
 import SurgeryEditPage from "./pages/surgery/SurgeryEditPage"
+import ParcelServicePage from "./pages/parcelService/ParcelServicePage"
+import ParcelServiceEditPage from "./pages/parcelService/ParcelServiceEditPage"
+import ParcelServiceAddPage from "./pages/parcelService/ParcelServiceAddPage"
 
 const CatalogListPage = () => {
 
@@ -127,6 +130,18 @@ const CatalogListPage = () => {
                                     exact
                                     path={`${path}/surgery/edit/:id`}
                                     component={SurgeryEditPage} />
+                                <PrivateRoute
+                                    exact
+                                    path={`${path}/parcelService/edit/:id`}
+                                    component={ParcelServiceEditPage} />
+                                <PrivateRoute
+                                    exact
+                                    path={`${path}/parcelService/`}
+                                    component={ParcelServicePage} />
+                                <PrivateRoute
+                                    exact
+                                    path={`${path}/parcelService/add`}
+                                    component={ParcelServiceAddPage} />
                             </Switch>
                         </Box>
                     </Grid>

@@ -44,6 +44,10 @@ const CatalogMenu = () => {
                         title="Cirugias"
                         link={`${url}/surgery`}
                         label="surgery"/>
+                    <CatalogMenuItem 
+                        title="Servicios de Paqueteria"
+                        link={`${url}/parcelService`}
+                        label="parcelService"/>
                 </List>
             </Box>
     )

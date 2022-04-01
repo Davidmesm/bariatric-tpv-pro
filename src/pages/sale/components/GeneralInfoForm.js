@@ -68,8 +68,14 @@ const GeneralInfoForm = (props) => {
                 }
                 else if (currentClient.recommendedDistributorId) {
                     let currDist = buyerData.find(client => client.value === currentClient.recommendedDistributorId)
-                    setValue("buyerId", watchClientId)
-                    setValue("distributorId", currDist.label || "")
+                    if(currDist) {
+                        setValue("buyerId", watchClientId)
+                        setValue("distributorId", currDist.label || "")
+                    }
+                    else
+                    {
+                        setValue("buyerId", watchClientId)
+                    }
                 }
                 else {
                     setValue("buyerId", watchClientId)
@@ -77,13 +83,35 @@ const GeneralInfoForm = (props) => {
             }
         }
 
-        if (watchClientId && (addressOptions.length > 0 && !watchAddressIndex)) {
+        if(watchClientId)
+        {
+            if(addressOptions && addressOptions.length > 0)
+            {
+                let address = addressOptions.find(a => a.value === watchClientId.mainAddress)
+
+                if(address)
+                {
+                    if(!watchAddressIndex)
+                    {
+                        setValue("addressIndex", address)
+                        setValue("address", address)
+                    }
+                    else
+                    {
+                        setValue("address", address)
+                    }
+                }
+            }
+        }
+
+        /*if (watchClientId && (addressOptions.length > 0 && !watchAddressIndex)) {
             let address = addressOptions.find(a => a.value === watchClientId.mainAddress)
 
             if (address) {
                 setValue("addressIndex", address)
+                setValue("address", address)
             }
-        }
+        }*/
 
     }, [watchClientId, buyerData, addressOptions, setValue])
 
@@ -225,7 +253,7 @@ const GeneralInfoForm = (props) => {
                         <Grid item sm={6}>
                             <Paper elevation={1}>
                                 <Box padding={3} minHeight="120px">
-                                    <SelectedAddressForm conrol={control} />
+                                    <SelectedAddressForm control={control} />
                                 </Box>
                             </Paper>
                         </Grid>

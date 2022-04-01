@@ -56,7 +56,7 @@ const TransferDialog = (props) => {
 
                     inventoryData.forEach(invBatch => {
                         let prodIndex = invBatch.products.findIndex(prod => prod.productId === data.productId &&
-                            (prod.flavour || '') === data.flavour || '')
+                            (prod.flavour ?? "") === (data.flavour ?? ""))
 
                         if (prodIndex >= 0) {
                             let product = invBatch.products[prodIndex]
@@ -72,7 +72,7 @@ const TransferDialog = (props) => {
                         return flattenData
                     }
                     else {
-                        console.error(`product for transfer not found: ${data.productName} ${data.flavour}`)
+                        console.error(`product for transfer not found: ${data.productName} ${data.flavour ?? ""}`)
                         createAlert("error", "Producto no encontrado.")
                         setOpenTransferDialog(false);
                     }
@@ -111,7 +111,7 @@ const TransferDialog = (props) => {
 
                         if (inventoryToUpdate) {
                             let productIndex = inventoryToUpdate.products.findIndex(p => p.productId === invBatch.productId &&
-                                (p.flavour || '') === (invBatch.flavour || ''));
+                                (p.flavour ?? "") === (invBatch.flavour ?? ""));
 
                             if (productIndex < 0) {
                                 throw new Error("product to update not found")
@@ -135,7 +135,7 @@ const TransferDialog = (props) => {
                         let newInvOut = {
                             date: firebase.firestore.Timestamp.fromDate(new Date()),
                             concept: "transfer", productId: data.productId,
-                            flavour: data.flavour, inventoryId: aInvOut.inventoryId,
+                            flavour: data.flavour ?? "", inventoryId: aInvOut.inventoryId,
                             warehouseId: data.originWarehouseId, qty: aInvOut.qty
                         }
 
@@ -149,7 +149,7 @@ const TransferDialog = (props) => {
                         let inventoryIn = {
                             date: firebase.firestore.Timestamp.fromDate(new Date()),
                             products: [{
-                                productId: data.productId, flavour: data.flavour,
+                                productId: data.productId, flavour: data.flavour ?? "",
                                 cost: inva.cost, qty: inva.qty
                             }],
                             reference: 'transfer',
@@ -183,7 +183,7 @@ const TransferDialog = (props) => {
                     let inventoryToSave = {
                         date: firebase.firestore.Timestamp.fromDate(new Date()),
                         inventoryInId: doc.id, warehouseId: data.targetWarehouseId, products: [{
-                            productId: data.productId, flavour: data.flavour,
+                            productId: data.productId, flavour: data.flavour ?? "",
                             cost: inva.products[0].cost, qty: inva.products[0].qty, qtyOut: 0, qtyIn: inva.products[0].qty
                         }],
                     }

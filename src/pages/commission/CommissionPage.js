@@ -4,7 +4,11 @@ import { Switch, useRouteMatch } from "react-router"
 import PrivateRoute from "../../components/PrivateRoute"
 import CommissionMenu from "./components/CommissionMenu"
 import DistributorCommission from "./pages/DistributorCommission"
+import DistributorCommissionAddPage from "./pages/DistributorCommissionAddPage"
+import DistributorCommissionEditPage from "./pages/DistributorCommissionEditPage"
 import VendorCommission from "./pages/VendorCommission"
+import VendorCommissionAddPage from "./pages/VendorCommissionAddPage"
+import VendorCommissionEditPage from "./pages/VendorCommissionEditPage"
 
 const CommissionPage = () => {
     let { path } = useRouteMatch()
@@ -34,6 +38,22 @@ const CommissionPage = () => {
                                     exact
                                     path={`${path}/distributor`}
                                     component={DistributorCommission} />
+                                <PrivateRoute
+                                    exact
+                                    path={`${path}/vendor/add`}
+                                    component={VendorCommissionAddPage} />
+                                <PrivateRoute
+                                    exact
+                                    path={`${path}/vendor/edit/:id`}
+                                    component={VendorCommissionEditPage} />
+                                <PrivateRoute
+                                    exact
+                                    path={`${path}/distributor/edit/:id`}
+                                    component={DistributorCommissionEditPage} />
+                                <PrivateRoute
+                                    exact
+                                    path={`${path}/distributor/add`}
+                                    component={DistributorCommissionAddPage} />
                                 </Switch>
                             </Box>
                     </Grid>

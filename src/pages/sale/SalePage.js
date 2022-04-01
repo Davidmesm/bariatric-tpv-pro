@@ -186,31 +186,31 @@ const SalePage = () => {
         },
         {
             field: "commissionApplied",
-            headerName: "Commisión Aplicadas",
+            headerName: "Comisión Aplicadas",
             width: 250,
             valueFormatter: (params) => `- $${parseFloat((params.value || 0)).toFixed(2)}`
         },
         {
             field: "diffCommission",
-            headerName: "Utilidad Differencial",
+            headerName: "Utilidad Diferencial",
             width: 200,
             valueFormatter: (params) => `$${parseFloat((params.value || 0)).toFixed(2)}`
         },
         {
             field: "level1Commission",
-            headerName: "Commisión Nivel 1",
+            headerName: "Comisión Nivel 1",
             width: 200,
             valueFormatter: (params) => `$${parseFloat((params.value || 0)).toFixed(2)}`
         },
         {
             field: "level2Commission",
-            headerName: "Commisión Nivel 2",
+            headerName: "Comisión Nivel 2",
             width: 200,
             valueFormatter: (params) => `$${parseFloat((params.value || 0)).toFixed(2)}`
         },
         {
             field: "vendorCommission",
-            headerName: "Commisión Vendedor",
+            headerName: "Comisión Vendedor",
             width: 250,
             valueFormatter: (params) => `$${parseFloat((params.value || 0)).toFixed(2)}`
         },
@@ -243,15 +243,15 @@ const SalePage = () => {
         { label: "Client Final", key: "client" },
         { label: "Distribuidor/Cliente Independiente", key: "buyer" },
         { label: "Vendedor", key: "vendor" },
-        { label: "Total Sin Envio", key: "totalProducts" },
-        { label: "Cobrar Envio", key: "hasChargeDelivery" },
-        { label: "Costo Envio", key: "deliveryCost" },
+        { label: "Total Sin Envió", key: "totalProducts" },
+        { label: "Cobrar Envió", key: "hasChargeDelivery" },
+        { label: "Costo Envió", key: "deliveryCost" },
         { label: "Distribuidor", key: "distributor" },
-        { label: "Utilidads Diferencial", key: "diffCommission" },
+        { label: "Utilidad Diferencial", key: "diffCommission" },
         { label: "Distribuidor Nivel 1", key: "level1Distributor" },
-        { label: "Comisiòn Nivel 1", key: "level1Commission" },
+        { label: "Comisión Nivel 1", key: "level1Commission" },
         { label: "Distribuidor Nivel 2", key: "level2Distributor" },
-        { label: "Comisiòn Nivel 2", key: "level2Commission" },
+        { label: "Comisión Nivel 2", key: "level2Commission" },
         { label: "Comisión Vendedor", key: "vendorCommission" },
         { label: "Total Pagado", key: "total" },
         { label: "Forma de Pago", key: "paymentType" },
@@ -260,7 +260,7 @@ const SalePage = () => {
         { label: "Calle", key: "address.street" },
         { label: "Numero", key: "address.extNumber" },
         { label: "Interior", key: "address.intRef" },
-        { label: "Codigo Postal", key: "address.zipCode" },
+        { label: "Código Postal", key: "address.zipCode" },
         { label: "Colonia", key: "address.suburb" },
         { label: "Ciudad", key: "address.city" },
         { label: "Estado", key: "address.state" },
@@ -400,10 +400,26 @@ const SalePage = () => {
                             .then(inventoryData => {
                                 if (inventoryData.length > 0) {
                                     let inventory = inventoryData[0];
+
                                     let productIndex = inventory.products.findIndex(p => {
-                                        return (p.productId === invOut.productId &&
-                                            p.flavour === invOut.flavour)
+                                        if(p.productId === invOut.productId)
+                                        {
+                                            if(invOut.flavour)
+                                            {
+                                                if(p.flavour === invOut.flavour)
+                                                {
+                                                    return true;
+                                                }
+
+                                                return false;
+                                            }
+
+                                            return true;
+                                        }
+
+                                        return false;
                                     })
+                                    
                                     const { id, ...inventoryToUpdate } = inventory;
 
                                     inventoryToUpdate.products[productIndex].qty += invOut.qty;

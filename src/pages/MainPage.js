@@ -23,6 +23,7 @@ import SaleAddPage from "./sale/SaleAddPage"
 import SaleEditPage from "./sale/SaleEditPage"
 import CommissionPage from "./commission/CommissionPage"
 import DeliveryPage from "./delivery/DeliveryPage"
+import DeveloperPage from "./developer/DeveloperPage"
 
 const MainPage = () => {
 
@@ -50,6 +51,7 @@ const MainPage = () => {
                 <PrivateRoute path={"/catalog"} component={CatalogListPage} />
                 <PrivateRoute path={"/commission"} component={CommissionPage} />
                 <PrivateRoute exact path={"/delivery"} component={DeliveryPage} />
+                <PrivateRoute exact path={"/developer"} component={DeveloperPage} />
             </Switch>
         </AppLayout>
     )

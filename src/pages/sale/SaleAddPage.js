@@ -196,7 +196,7 @@ const SaleAddPage = () => {
 
                     let productIndex = batchToSave.products.findIndex(p => {
                         return p.productId === out.productId &&
-                            p.flavour === out.flavour
+                            (p.flavour  ?? "") === (out.flavour ?? "")
                     })
 
                     if (productIndex === -1) {
@@ -207,12 +207,13 @@ const SaleAddPage = () => {
                     batchToSave.products[productIndex].qtyOut += out.qty
 
                     let invOutToSave = {
+                        date: new Date(),
                         saleId: saleId,
                         inventoryId: out.inventoryId,
                         warehouseId: batch.warehouseId,
                         concept: "Venta",
                         productId: out.productId,
-                        flavour: out.flavour,
+                        flavour: out.flavour ?? "",
                         qty: out.qty
                     }
 
@@ -367,7 +368,7 @@ const SaleAddPage = () => {
                     if (productLeft > 0) {
                         let productIndex =
                             batch.products.findIndex(p => p.productId === product.productId &&
-                                p.flavour === product.flavour)
+                                (p.flavour ?? "") === (product.flavour ?? ""))
 
                         if (productIndex > -1) {
                             let prodInventory = batch.products[productIndex]
@@ -384,7 +385,7 @@ const SaleAddPage = () => {
                                 warehouseId: batch.warehouseId,
                                 inventoryId: batch.inventoryInId,
                                 concept: "VENTA",
-                                flavour: product.flavour,
+                                flavour: product.flavour ?? "",
                                 productId: product.productId,
                                 qty: outQty
                             })

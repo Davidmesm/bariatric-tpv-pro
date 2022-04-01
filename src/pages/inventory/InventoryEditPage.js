@@ -85,7 +85,7 @@ const InventoryEditPage = () => {
 
                         data.products.forEach(product => {
                             let invProductIndex = inventory.products.findIndex(p => p.productId === product.productId &&
-                                p.flavour === product.flavour)
+                                (p.flavour ?? "") === (product.flavour ?? ""))
 
                             if (invProductIndex === -1) {
                                 inventory.products.push({ ...product, qtyIn: product.qty, qtyOut: 0 })
@@ -157,7 +157,7 @@ const InventoryEditPage = () => {
                                         let cProd = productOptions.find(cp => cp.value === p.productId)
                                         return { 
                                             productId: cProd, 
-                                            flavour: {value:p.flavour, label:p.flavour, render:p.flavour}, 
+                                            flavour: {value:p.flavour ?? "", label:p.flavour ?? "", render:p.flavour ?? ""}, 
                                             cost: p.cost, 
                                             qty: p.qty }
                                     })

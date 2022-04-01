@@ -8,7 +8,7 @@ const AddressDialog = (props) => {
 
     const { open, setOpen, action, index, remove, update } = props
 
-    const { control, trigger, getValues, formState: { errors } } = useFormContext()
+    const { control, trigger, getValues } = useFormContext()
 
     const [originalAddress, setOriginalAddress] = useState()
 
@@ -56,7 +56,7 @@ const AddressDialog = (props) => {
                 <Box display='flex' flexDirection='column'>
                     <Box>
                         <BooleanFieldInput
-                            name="isFiscalAddress"
+                            name={`addresses.${index}.isFiscalAddress`}
                             control={control}
                             label="Dirección Fiscal" />
                     </Box>

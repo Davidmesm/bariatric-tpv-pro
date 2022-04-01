@@ -26,6 +26,7 @@ const App = () => {
                 <PrivateRoute path="/inventory" component={MainPage} />
                 <PrivateRoute path="/commission" component={MainPage} />
                 <PrivateRoute path="/delivery" component={MainPage} />
+                <PrivateRoute path="/developer" component={MainPage} />
                 <Route path="/login" component={LoginPage} />
                 <Route path="/reset-password" component={ResetPassword} />
               </Switch>

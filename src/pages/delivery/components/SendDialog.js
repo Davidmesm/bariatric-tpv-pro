@@ -5,6 +5,7 @@ import { useWatch } from "react-hook-form"
 import { trackPromise } from "react-promise-tracker"
 import DateFieldInput from "../../../components/inputs/DateFieldInput"
 import TextFieldInput from "../../../components/inputs/TextFieldInput"
+import SelectFieldInput from "../../../components/inputs/SelectFieldInput"
 import { useAlerts } from "../../../contexts/AlertsContext"
 import { db } from "../../../firebase"
 import SelectedAddressForm from "../../sale/components/SelectedAddressForm"
@@ -18,9 +19,12 @@ const SendDialog = (props) => {
         openDialog,
         setOpenDialog,
         isSubmitting,
+        setValue,
+        parcelServiceData,
         handleSubmit } = props
 
     const watchProducts = useWatch({ control: control, name: "products", defaultValue: [] })
+
 
     const handleClose = () => {
         setOpenDialog(false);
@@ -153,7 +157,7 @@ const SendDialog = (props) => {
                                                 <List>
                                                     {watchProducts.map((field) => (
                                                         <ListItem key={field.id}>
-                                                            <ListItemText primary={`${field.product} ${field.flavour ? field.flavour : ""}`}
+                                                            <ListItemText primary={`${field.product} ${field.flavour ?? ""}`}
                                                                 secondary={`Cantidad: ${field.qty}`} />
                                                         </ListItem>
                                                     ))}
@@ -176,16 +180,19 @@ const SendDialog = (props) => {
                                                 control={control}
                                                 fullWidth />
                                         </Box>
-                                        <br/>
+                                        <br />
                                         <Box>
-                                            <TextFieldInput
-                                                label="Servicio de Paqueteria"
+                                            <SelectFieldInput
                                                 name="parcelService"
+                                                label="Servicio de Paqueteria"
                                                 control={control}
-                                                fullWidth />
+                                                setValue={setValue}
+                                                variant="outlined"
+                                                fullWidth
+                                                options={parcelServiceData} />
                                         </Box>
-                                        <br/>
-                                        <br/>
+                                        <br />
+                                        <br />
                                         <Box>
                                             <TextFieldInput
                                                 label="Guia de Rastreo"

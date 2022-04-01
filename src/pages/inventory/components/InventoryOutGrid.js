@@ -9,6 +9,7 @@ const InventoryOutGrid = (props) => {
     const [inventoryOutData, setInventoryOutData] = useState([])
 
     const columns = [
+        { field: "date", headerName: "Fecha", width: 250, type: "date" },
         { field: "inventoryId", headerName: "Clave Compra", width: 250 },
         { field: "saleId", headerName: "Venta", width: 200 },
         { field: "productName", headerName: "Producto", flex: 1 },
@@ -24,6 +25,7 @@ const InventoryOutGrid = (props) => {
                     let invBatch = []
                     snapShot.forEach((doc) => {
                         let docData = doc.data()
+                        docData.date = docData.date.toDate()
                         invBatch.push({ id: doc.id, ...docData })
                     })
 
@@ -44,6 +46,7 @@ const InventoryOutGrid = (props) => {
                     let invBatch = []
                     snapShot.forEach((doc) => {
                         let docData = doc.data()
+                        docData.date = docData.date.toDate()
                         invBatch.push({ id: doc.id, ...docData })
                     })
 

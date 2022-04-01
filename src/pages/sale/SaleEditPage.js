@@ -81,6 +81,7 @@ const SaleEditPage = () => {
     const { control, handleSubmit, trigger, watch, setValue, setError,
         formState: { errors, isSubmitting } } = methods
 
+    // eslint-disable-next-line no-empty-pattern
     const { } = useFieldArray({
         control,
         name: "products",
@@ -210,7 +211,7 @@ const SaleEditPage = () => {
 
                     let productIndex = batchToSave.products.findIndex(p => {
                         return p.productId === out.productId &&
-                            p.flavour === out.flavour
+                            (p.flavour  ?? "") === (out.flavour ?? "")
                     })
 
                     if (productIndex === -1) {
@@ -221,12 +222,13 @@ const SaleEditPage = () => {
                     batchToSave.products[productIndex].qtyOut += out.qty
 
                     let invOutToSave = {
+                        date: new Date(),
                         saleId: saleId,
                         inventoryId: out.inventoryId,
                         warehouseId: batch.warehouseId,
                         concept: "Venta",
                         productId: out.productId,
-                        flavour: out.flavour,
+                        flavour: out.flavour ?? "",
                         qty: out.qty
                     }
 
@@ -496,10 +498,26 @@ const SaleEditPage = () => {
                             .then(inventoryData => {
                                 if (inventoryData.length > 0) {
                                     let inventory = inventoryData[0]
+                                    
                                     let productIndex = inventory.products.findIndex(p => {
-                                        return (p.productId === invOut.productId &&
-                                            p.flavour === invOut.flavour)
+                                        if(p.productId === invOut.productId)
+                                        {
+                                            if(invOut.flavour)
+                                            {
+                                                if(p.flavour === invOut.flavour)
+                                                {
+                                                    return true;
+                                                }
+
+                                                return false;
+                                            }
+
+                                            return true;
+                                        }
+
+                                        return false;
                                     })
+
                                     const { id, ...inventoryToUpdate } = inventory
 
                                     inventoryToUpdate.products[productIndex].qty += invOut.qty
@@ -547,7 +565,7 @@ const SaleEditPage = () => {
                     if (productLeft > 0) {
                         let productIndex =
                             batch.products.findIndex(p => p.productId === product.productId &&
-                                p.flavour === product.flavour)
+                                (p.flavour ?? "") === (product.flavour ?? ""))
 
                         if (productIndex > -1) {
                             let prodInventory = batch.products[productIndex]
@@ -564,7 +582,7 @@ const SaleEditPage = () => {
                                 warehouseId: batch.warehouseId,
                                 inventoryId: batch.inventoryInId,
                                 concept: "VENTA",
-                                flavour: product.flavour,
+                                flavour: product.flavour ?? "",
                                 productId: product.productId,
                                 qty: outQty
                             })
@@ -782,7 +800,7 @@ const SaleEditPage = () => {
 
                                         let { productId, flavour, price, ...productToAdd } = p
 
-                                        let flavourToAdd = { value: p.flavour, label: p.flavour, render: p.flavour }
+                                        let flavourToAdd = { value: p.flavour ?? "", label: p.flavour ?? "", render: p.flavour ?? "" }
                                         let priceToAdd = { value: p.price.toString(), label: p.price.toString(), render: p.price.toString() }
 
                                         productToAdd = { ...productToAdd, productId: product, flavour: flavourToAdd, price: priceToAdd }

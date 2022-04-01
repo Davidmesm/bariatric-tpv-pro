@@ -1,17 +1,16 @@
 import { Box, IconButton, Typography } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { Input, SettingsBackupRestore } from "@material-ui/icons";
-import React, { useState } from "react"
+import React from "react"
 
 const SentGrid = (props) => {
-    const { data, clientData, setOpenDialogRecieve, setIdToRecieve, setOpenDialogReturn, setIdToReturn } = props
-    
-    const [sortModel, setSortModel] = useState([
-        {
-          field: 'sendDate',
-          sort: 'desc',
-        },
-      ]);
+    const { data, 
+        clientData, 
+        setOpenDialogRecieve, 
+        setIdToRecieve, 
+        setOpenDialogReturn, 
+        setIdToReturn,
+        parcelServiceData } = props
 
     const handleRecieveClick = (id) => {
         setIdToRecieve(id)
@@ -35,6 +34,19 @@ const SentGrid = (props) => {
         let client = clientData.find(item => item.id === params.row.clientId)
 
         return client ? client.phone : ""
+    }
+
+    const getParcelService = (params) => {
+        if(!params || !params.row)
+            return ""
+
+
+        if(!params.row.parcelService)
+            return ""
+
+        let service = parcelServiceData.find(item => item.value === params.row.parcelService)
+
+        return service ? service.label : ""
     }
 
     const columns = [
@@ -93,7 +105,14 @@ const SentGrid = (props) => {
                 </div>
             )
         },
-        { field: "parcelService", headerName: "Servicio de Paquetería", width: 230 },
+        {
+            field: "parcelService",
+            headerName: "Servicio de Paquetería",
+            width: 230,
+            valueGetter: getParcelService,
+            sortComparator: (v1, v2, cellParam1, cellParam2) =>
+            getParcelService(cellParam1).localeCompare(getParcelService(cellParam2))
+        },
         { field: "trackingGuide", headerName: "Guía de Rastreo", width: 300}];
 
 

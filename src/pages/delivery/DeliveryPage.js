@@ -36,7 +36,9 @@ const schema = yup.object().shape({
     phone: yup.string().required().default(""),
     saleDate: yup.date().required(),
     sendDate: yup.date().required("Fecha Envio requerida"),
-    parcelService: yup.string().required("Servicio de Paqueteria requerido").default(""),
+    parcelService: yup.string().transform((value) => {
+        return value ? value.value : ""
+    }).required("Servicio de Paqueteria requerido").default(""),
     trackingGuide: yup.string().required("Guia de Rastreo requerida").default("")
 })
 
@@ -58,7 +60,9 @@ const DeliveryPage = () => {
     const [openReturnToPendingDialog, setOpenReturnToPendingDialog] = useState(false)
     const [idToRecieve, setIdToRecieve] = useState()
     const [idToReturn, setIdToReturn] = useState()
+    const [parcelServiceData, setParcelServiceData] = useState([])
 
+    // eslint-disable-next-line no-extend-native
     Date.prototype.yyyymmdd = function () {
         var mm = this.getMonth() + 1
         var dd = this.getDate()
@@ -139,7 +143,7 @@ const DeliveryPage = () => {
             })
     }
 
-    const { control, handleSubmit, setValue, watch, reset,
+    const { control, handleSubmit, setValue, reset,
         formState: { errors, isSubmitting } } =
         useForm({
             resolver: yupResolver(schema),
@@ -222,6 +226,23 @@ const DeliveryPage = () => {
                     console.error("Error retrieving products: ", error)
                 }))
     }, [setProductData])
+
+    useEffect(() => {
+        const unsubscribe = db.collection("parcelService")
+            .orderBy("order")
+            .onSnapshot((snapShot) => {
+                let parcelServices = []
+                snapShot.forEach((doc) => {
+                    let docData = doc.data();
+                    parcelServices.push({ value: doc.id, label: docData.name, render: docData.name })
+                })
+                setParcelServiceData(parcelServices);
+            }, (error) => {
+                console.error("Unable to subscribe to parcelService, error: ", error)
+            })
+        return unsubscribe
+    }, [setParcelServiceData])
+    
 
     useEffect(() => {
         let pendingHeaders = [
@@ -433,12 +454,14 @@ const DeliveryPage = () => {
                         setOpenDialogReturn={setOpenReturnToPendingDialog}
                         setIdToReturn={setIdToReturn}
                         setOpenDialogRecieve={setOpenRecieveDialog}
+                        parcelServiceData={parcelServiceData}
                         setIdToRecieve={setIdToRecieve}
                     />}
                 {currentGrid === 2 &&
                     <DeliveredGrid
                         data={deliveredDeliveryData}
                         clientData={clientData}
+                        parcelServiceData={parcelServiceData}
                     />}
             </Box>
             <SendDialog
@@ -447,6 +470,7 @@ const DeliveryPage = () => {
                 setValue={setValue}
                 openDialog={openPendingDialog}
                 setOpenDialog={setOpenPendingDialog}
+                parcelServiceData={parcelServiceData}
                 handleSubmit={handleSubmit}
                 isSubmitting={isSubmitting} />
             <RecieveDialog

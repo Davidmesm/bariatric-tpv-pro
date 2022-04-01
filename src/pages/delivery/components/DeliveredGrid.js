@@ -4,7 +4,7 @@ import React from "react"
 
 
 const DeliveredGrid = (props) => {
-    const { data, clientData } = props
+    const { data, clientData, parcelServiceData } = props
 
     const getClient = (params) => {
         let client = clientData.find(item => item.id === params.row.clientId)
@@ -16,6 +16,19 @@ const DeliveredGrid = (props) => {
         let client = clientData.find(item => item.id === params.row.clientId)
 
         return client ? client.phone : ""
+    }
+
+    const getParcelService = (params) => {
+        if(!params || !params.row)
+            return ""
+
+
+        if(!params.row.parcelService)
+            return ""
+
+        let service = parcelServiceData.find(item => item.value === params.row.parcelService)
+
+        return service ? service.label : ""
     }
 
     const columns = [
@@ -51,7 +64,14 @@ const DeliveredGrid = (props) => {
                 </div>
             )
         },
-        { field: "parcelService", headerName: "Servicio de Paquetería", width: 230 },
+        {
+            field: "parcelService",
+            headerName: "Servicio de Paquetería",
+            width: 230,
+            valueGetter: getParcelService,
+            sortComparator: (v1, v2, cellParam1, cellParam2) =>
+            getParcelService(cellParam1).localeCompare(getParcelService(cellParam2))
+        },
         { field: "trackingGuide", headerName: "Guía de Rastreo", width: 300 }];
 
     return (

@@ -27,5 +27,11 @@
         "!Select sequence",
         "!Split",
         "!Split sequence"
+    ],
+    "cSpell.words": [
+        "accum",
+        "firestore",
+        "inva",
+        "Orden"
     ]
 }

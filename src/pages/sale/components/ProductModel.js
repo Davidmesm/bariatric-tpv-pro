@@ -80,7 +80,7 @@ const ProductModel = (props) => {
                     let flavour = watchFlavour && watchFlavour.value ? watchFlavour.value : undefined
 
                     if (product.productId === watchProductId.value
-                        && product.flavour === flavour) {
+                        && (product.flavour ?? "") === (flavour ?? "")) {
                         products = [...products, product];
                     }
                 })

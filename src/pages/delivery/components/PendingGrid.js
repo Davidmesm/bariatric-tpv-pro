@@ -15,7 +15,7 @@ const PendingGrid = (props) => {
         let products = delivery.products.map(sp => {
             let product = productData.find(p => p.id === sp.productId)
 
-            return { id: index++, product: product ? product.name : "error", flavour: sp.flavour, qty: sp.qty}
+            return { id: index++, product: product ? product.name : "error", flavour: sp.flavour ?? "", qty: sp.qty}
         })
 
         let client = clientData.find(client => client.id === delivery.clientId)

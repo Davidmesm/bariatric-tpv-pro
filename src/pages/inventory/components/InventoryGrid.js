@@ -16,7 +16,7 @@ const InventoryGrid = (props) => {
         reset()
 
         setValue("productId", { value: productInfo.productId, label: productInfo.productName, render: productInfo.productName })
-        setValue("flavour", productInfo.flavour)
+        setValue("flavour", productInfo.flavour ?? "")
         setValue("originWarehouseId", warehouse)
         setValue("originQty", productInfo.qty)
 
@@ -55,7 +55,7 @@ const InventoryGrid = (props) => {
             let data = []
             invBatches.forEach(batch =>
                 batch.products.forEach(batchProduct => {
-                    let dataProductIndex = data.findIndex(p => p.productId === batchProduct.productId && p.flavour === batchProduct.flavour)
+                    let dataProductIndex = data.findIndex(p => p.productId === batchProduct.productId && (p.flavour ?? "") === (batchProduct.flavour ?? ""))
 
                     if (dataProductIndex === -1) {
                         const { cost, qtyIn, qtyOut, ...productToAdd } = batchProduct;
