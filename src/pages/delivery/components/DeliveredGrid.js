@@ -75,7 +75,7 @@ const DeliveredGrid = (props) => {
         { field: "trackingGuide", headerName: "Guía de Rastreo", width: 300 }];
 
     return (
-        <Box height="400px">
+        <Box height="570px">
             <Box display="flex" height="100%">
                 <Box flexGrow={1}>
                     <DataGrid

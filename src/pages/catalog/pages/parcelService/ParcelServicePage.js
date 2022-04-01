@@ -40,7 +40,7 @@ const ParcelServicePage = () => {
             )
         },
         { field: "order", headerName: "Orden", width: 130 },
-        { field: "name", headerName: "Servicio de Paqueteria", flex: 1 }
+        { field: "name", headerName: "Servicio de Paquetería", flex: 1 }
     ]
 
     const addFunction = () => {
@@ -94,9 +94,9 @@ const ParcelServicePage = () => {
         <Box>
             <PageToolBar 
                 parent={`${url}`} 
-                title="Servicio de Paqueteria"
+                title="Servicio de Paquetería"
                 addFunction={addFunction} />
-            <Box height="400px">
+            <Box height="500px">
                 <Box display="flex" height="100%">
                     <Box flexGrow={1}>
                         <DataGrid
@@ -109,7 +109,7 @@ const ParcelServicePage = () => {
                 setOpenDialog={setOpenDeleteDialog}
                 openDialog={openDeleteDialog}
                 idToDelete={idToDelete}
-                entityTitle="Servicio de Paqueteria"
+                entityTitle="Servicio de Paquetería"
                 confirmDeleteClick={confirmDeleteClick} />
         </Box>
     )

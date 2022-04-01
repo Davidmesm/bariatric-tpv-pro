@@ -182,7 +182,7 @@ const DistributorCommission = () => {
             data={exportData}
             addFunction={addFunction}
             headers={exportHeaders} />
-        <Box height="400px">
+        <Box height="500px">
             <Box display="flex" height="100%">
                 <Box flexGrow={1}>
                     <DataGrid

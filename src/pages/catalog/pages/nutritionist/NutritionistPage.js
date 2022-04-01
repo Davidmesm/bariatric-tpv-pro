@@ -64,7 +64,7 @@ const NutritionistPage = () => {
             })
             .catch((error) => {
                 createAlert("error", "Error al eliminar al nutriólogo o grupo")
-                console.error("Error deleting nutritionistdocument: ", error);
+                console.error("Error deleting nutritionist document: ", error);
             });
 
     }
@@ -96,7 +96,7 @@ const NutritionistPage = () => {
                 parent={`${url}`} 
                 title="Nutriólogo o Grupo"
                 addFunction={addFunction} />
-            <Box height="400px">
+            <Box height="500px">
                 <Box display="flex" height="100%">
                     <Box flexGrow={1}>
                         <DataGrid

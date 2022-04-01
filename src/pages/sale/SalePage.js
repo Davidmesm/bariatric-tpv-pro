@@ -705,7 +705,7 @@ const SalePage = () => {
             data={exportData}
             headers={exportColumns}
             addFunction={addFunction}>
-            <Box height="400px">
+            <Box height="570px">
                 <Box display="flex" height="100%">
                     <Box flexGrow={1}>
                         <DataGrid
