@@ -96,7 +96,7 @@ const PriceTypePage = () => {
                 parent={`${url}`}
                 title="Tipo de Precio"
                 addFunction={addFunction} />
-            <Box height="400px">
+            <Box height="500px">
                 <Box display="flex" height="100%">
                     <Box flexGrow={1}>
                         <DataGrid

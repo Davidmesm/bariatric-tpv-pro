@@ -138,7 +138,7 @@ const BankAccountPage = () => {
                 parent={`${url}`}
                 title="Cuenta de Banco"
                 addFunction={addFunction} />
-            <Box height="400px">
+            <Box height="500px">
                 <Box display="flex" height="100%">
                     <Box flexGrow={1}>
                         <DataGrid
