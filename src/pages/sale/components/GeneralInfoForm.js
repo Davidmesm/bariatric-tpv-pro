@@ -10,7 +10,7 @@ import TextFieldInput from "../../../components/inputs/TextFieldInput"
 
 const GeneralInfoForm = (props) => {
 
-    const { vendorData, clientData, warehouseData } = props
+    const { vendorData,     clientData, warehouseData } = props
 
     const [buyerData, setBuyerData] = useState([])
     const [vendorWarehouseData, setVendorWarehouseData] = useState([])
@@ -234,7 +234,7 @@ const GeneralInfoForm = (props) => {
                             <Box width="100%"
                                 display="flex"
                                 flexDirection="column"
-                                justifyContent="space-betwee">
+                                justifyContent="space-between">
                                 <BooleanFieldInput
                                     name="delivered"
                                     control={control}

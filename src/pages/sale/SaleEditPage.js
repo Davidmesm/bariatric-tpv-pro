@@ -79,7 +79,7 @@ const SaleEditPage = () => {
     const { id: saleId } = useParams()
 
     const { control, handleSubmit, trigger, watch, setValue, setError,
-        formState: { errors, isSubmitting } } = methods
+        formState: { errors, isSubmitting, isSubmitted } } = methods
 
     // eslint-disable-next-line no-empty-pattern
     const { } = useFieldArray({
@@ -200,8 +200,18 @@ const SaleEditPage = () => {
             let promises = []
 
             if (infoResult.invOut && infoResult.invOut.length > 0) {
+                let inventory = []
+                let result = await db.collection("inventory").get()
+                result.forEach((doc) => {
+                    let docData = doc.data()
+                    inventory.push({
+                        id: doc.id,
+                        ...docData
+                    })
+                })
+
                 infoResult.invOut.forEach(out => {
-                    let batch = warehouseInventoryData.find(b => b.inventoryInId === out.inventoryId)
+                    let batch = inventory.find(b => b.inventoryInId === out.inventoryId)
 
                     if (!batch) {
                         throw new Error(`inventory batch "${out.inventoryId}" not found`)
@@ -211,7 +221,7 @@ const SaleEditPage = () => {
 
                     let productIndex = batchToSave.products.findIndex(p => {
                         return p.productId === out.productId &&
-                            (p.flavour  ?? "") === (out.flavour ?? "")
+                            (p.flavour ?? "") === (out.flavour ?? "")
                     })
 
                     if (productIndex === -1) {
@@ -498,14 +508,11 @@ const SaleEditPage = () => {
                             .then(inventoryData => {
                                 if (inventoryData.length > 0) {
                                     let inventory = inventoryData[0]
-                                    
+
                                     let productIndex = inventory.products.findIndex(p => {
-                                        if(p.productId === invOut.productId)
-                                        {
-                                            if(invOut.flavour)
-                                            {
-                                                if(p.flavour === invOut.flavour)
-                                                {
+                                        if (p.productId === invOut.productId) {
+                                            if (invOut.flavour) {
+                                                if (p.flavour === invOut.flavour) {
                                                     return true;
                                                 }
 
@@ -574,24 +581,27 @@ const SaleEditPage = () => {
                             if (prodInventory.qty >= product.qty) {
                                 outQty = product.qty
                             }
-                            else {
+                            else if (prodInventory.qty > 0) {
                                 outQty = product.qty - prodInventory.qty
                             }
 
-                            infoResult.invOut.push({
-                                warehouseId: batch.warehouseId,
-                                inventoryId: batch.inventoryInId,
-                                concept: "VENTA",
-                                flavour: product.flavour ?? "",
-                                productId: product.productId,
-                                qty: outQty
-                            })
+                            if (outQty > 0) {
+                                infoResult.invOut.push({
+                                    warehouseId: batch.warehouseId,
+                                    inventoryId: batch.inventoryInId,
+                                    concept: "VENTA",
+                                    flavour: product.flavour ?? "",
+                                    productId: product.productId,
+                                    qty: outQty
+                                })
 
-                            productLeft -= outQty
-                            infoResult.cost += prodInventory.cost * outQty
+                                productLeft -= outQty
+                                infoResult.cost += prodInventory.cost * outQty
+                            }
                         }
                     }
                 })
+
             })
 
             resolve(infoResult)
@@ -645,8 +655,7 @@ const SaleEditPage = () => {
             } else if (!distributor.recommendedDistributorId) {
                 resolve(null)
             }
-            else
-            {
+            else {
                 let distFromDistributor = clientData.find(c => c.value === distributor.recommendedDistributorId)
                 return resolve(distFromDistributor)
             }
@@ -758,6 +767,8 @@ const SaleEditPage = () => {
     }
 
     useEffect(() => {
+        if(isSubmitted) return
+
         trackPromise(
             db.collection('sale')
                 .doc(saleId)
@@ -843,7 +854,7 @@ const SaleEditPage = () => {
                 }))
     }, [clientData, vendorData, warehouseData, productData,
         priceTypeData, warehouseInventoryData, paymentTypeData,
-        bankAccountData, setValue, createAlert, history, saleId])
+        bankAccountData, setValue, createAlert, history, saleId, isSubmitted])
 
     useEffect(() => {
         if (addressIndex > -1 && watchClientId) {
@@ -880,13 +891,12 @@ const SaleEditPage = () => {
     }, [])
 
     useEffect(() => {
-        trackPromise(
+        const unsubscribe =
             db.collection("warehouse")
                 .orderBy("name")
-                .get()
-                .then((result) => {
+                .onSnapshot((snapShot) => {
                     let warehouses = []
-                    result.forEach((doc) => {
+                    snapShot.forEach((doc) => {
                         let docData = doc.data()
                         warehouses.push({
                             value: doc.id,
@@ -896,10 +906,11 @@ const SaleEditPage = () => {
                         })
                     })
                     setWarehouseData(warehouses)
-                })
-                .catch((error) => {
+                }, (error) => {
                     console.error("Error retrieving warehouse: ", error)
-                }))
+                })
+
+        return unsubscribe
     }, [])
 
     useEffect(() => {

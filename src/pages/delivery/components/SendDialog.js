@@ -175,7 +175,7 @@ const SendDialog = (props) => {
                                         justifyContent="space-between">
                                         <Box>
                                             <DateFieldInput
-                                                label="Fecha de Envio"
+                                                label="Fecha de Envío"
                                                 name="sendDate"
                                                 control={control}
                                                 fullWidth />
@@ -184,7 +184,7 @@ const SendDialog = (props) => {
                                         <Box>
                                             <SelectFieldInput
                                                 name="parcelService"
-                                                label="Servicio de Paqueteria"
+                                                label="Servicio de Paquetería"
                                                 control={control}
                                                 setValue={setValue}
                                                 variant="outlined"
@@ -195,7 +195,7 @@ const SendDialog = (props) => {
                                         <br />
                                         <Box>
                                             <TextFieldInput
-                                                label="Guia de Rastreo"
+                                                label="Guía de Rastreo"
                                                 name="trackingGuide"
                                                 control={control}
                                                 fullWidth />

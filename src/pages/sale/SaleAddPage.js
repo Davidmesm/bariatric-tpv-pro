@@ -377,26 +377,30 @@ const SaleAddPage = () => {
                             if (prodInventory.qty >= product.qty) {
                                 outQty = product.qty
                             }
-                            else {
+                            else if(prodInventory.qty > 0){
                                 outQty = product.qty - prodInventory.qty
                             }
 
-                            infoResult.invOut.push({
-                                warehouseId: batch.warehouseId,
-                                inventoryId: batch.inventoryInId,
-                                concept: "VENTA",
-                                flavour: product.flavour ?? "",
-                                productId: product.productId,
-                                qty: outQty
-                            })
-
-                            productLeft -= outQty
-                            infoResult.cost += prodInventory.cost * outQty
+                            if(outQty > 0)
+                            {
+                                infoResult.invOut.push({
+                                    warehouseId: batch.warehouseId,
+                                    inventoryId: batch.inventoryInId,
+                                    concept: "VENTA",
+                                    flavour: product.flavour ?? "",
+                                    productId: product.productId,
+                                    qty: outQty
+                                })
+    
+                                productLeft -= outQty
+                                infoResult.cost += prodInventory.cost * outQty
+                            }
                         }
                     }
                 })
-            })
 
+            })
+            
             resolve(infoResult)
         })
 

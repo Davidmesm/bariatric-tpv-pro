@@ -84,7 +84,7 @@ const InventoryAddPage = () => {
                             console.error("Error saving inventory: ", error);
                             setError("save", {
                                 type: "firebase-error",
-                                message: "Error Desconcido: No se pudo guardar la compra."
+                                message: "Error Desconocido: No se pudo guardar la compra."
                             })
                         })
                 })
@@ -92,7 +92,7 @@ const InventoryAddPage = () => {
                     console.error("Error saving inventoryIn: ", error);
                     setError("save", {
                         type: "firebase-error",
-                        message: "Error Desconcido: No se pudo guardar la compra."
+                        message: "Error Desconocido: No se pudo guardar la compra."
                     })
                 }))
     }
@@ -147,7 +147,7 @@ const InventoryAddPage = () => {
     }
 
     return (
-        <FormPageLayout title={`Compra para Almacen "${warehouse && warehouse.name}"`}>
+        <FormPageLayout title={`Compra para Almacén "${warehouse && warehouse.name}"`}>
             <FormProvider {...methods}>
                 <form onSubmit={handleSubmit(onSubmit, onError)} id="add-client-form">
                     {(errors && errors.save) &&

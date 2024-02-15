@@ -70,7 +70,7 @@ const AppMenu = () => {
             <List>
                 <MenuItem to="/" title="Panel Principal" icon={<Dashboard fontSize="large"/>}/>
                 <MenuItem to="/sale" title="Ventas" icon={<MonetizationOn fontSize="large"/>}/> 
-                <MenuItem to="/delivery" title="Envios" icon={<AllInbox fontSize="large"/>}/> 
+                <MenuItem to="/delivery" title="Envíos" icon={<AllInbox fontSize="large"/>}/> 
                 <MenuItem to="/client" title="Clientes" icon={<People fontSize="large"/>}/>
                 <MenuItem to="/vendor" title="Vendedores" icon={<SupervisedUserCircle fontSize="large"/>}/>
                 <MenuItem to="/commission" title="Reporte Comisiones" icon={<AccountBalanceWallet fontSize="large"/>}/> 

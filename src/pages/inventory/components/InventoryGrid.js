@@ -48,7 +48,7 @@ const InventoryGrid = (props) => {
     useEffect(() => {
         const processBatch = (invBatches) => {
             invBatches = invBatches.filter(batch => {
-                let batchProducts = batch.products.filter(invProd => invProd.qty != 0)
+                let batchProducts = batch.products.filter(invProd => invProd.qty !== 0)
                 return batchProducts.length > 0
             })
 

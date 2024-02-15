@@ -12,6 +12,9 @@ const SelectedAddressForm = (props) => {
         <>
             {address && <>
             <Typography>
+                {address.name}
+            </Typography>
+            <Typography>
                 {`${address.street} ${address.extNumber} ${address.intRef ? `int ${address.intRef}` : ""}`}
             </Typography>
             <Typography>

@@ -28,6 +28,18 @@ const SalePage = () => {
     const [productData, setProductData] = useState([])
     const [exportData, setExportData] = useState([])
 
+    // eslint-disable-next-line no-extend-native
+    Date.prototype.yyyymmdd = function () {
+        var mm = this.getMonth() + 1
+        var dd = this.getDate()
+
+        return [(dd > 9 ? "" : "0") + dd,
+            "/",
+        (mm > 9 ? "" : "0") + mm,
+            "/",
+        this.getFullYear()].join("")
+    }
+
     const getClient = (params) => {
         let client = clientData.find(item => item.id === params.row.clientId)
 
@@ -54,6 +66,7 @@ const SalePage = () => {
 
         return `${vendor ? `${vendor.firstName} ${vendor.lastName}` : ""}`
     }
+    
     const getVendorCommission = (params) => {
         let client = clientData.find(item => item.id === params.row.clientId)
 
@@ -165,24 +178,46 @@ const SalePage = () => {
         },
         {
             field: "vendor",
-            headerName: "Atendio la Venta",
+            headerName: "Atendió la Venta",
             width: 250,
             valueGetter: getVendor,
             sortComparator: (v1, v2, cellParam1, cellParam2) =>
                 getVendor(cellParam1).localeCompare(getVendor(cellParam2))
         },
-        { field: "hasChargeDelivery", headerName: "Cobrar Envio", width: 200, type: "boolean" },
+        { field: "hasChargeDelivery", headerName: "Cobrar Envío", width: 200, type: "boolean" },
         {
             field: "deliveryCost",
-            headerName: "Costo Envio",
+            headerName: "Costo Envío",
             width: 150,
             valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`
         },
         {
             field: "totalProducts",
-            headerName: "Total s/ Envio",
+            headerName: "Total s/ Envío",
             width: 250,
             valueFormatter: (params) => `$${parseFloat(params.value).toFixed(2)}`
+        },
+        {
+            field: "total",
+            headerName: "Total",
+            width: 150,
+            valueFormatter: (params) => `$${parseFloat(params.value || 0).toFixed(2)}`
+        },
+        {
+            field: "paymentType",
+            headerName: "Forma de Pago",
+            width: 200,
+            valueGetter: getPaymentType,
+            sortComparator: (v1, v2, cellParam1, cellParam2) =>
+                getPaymentType(cellParam1).localeCompare(getPaymentType(cellParam2))
+        },
+        {
+            field: "bankAccount",
+            headerName: "Cuenta Banco",
+            width: 200,
+            valueGetter: getBankAccount,
+            sortComparator: (v1, v2, cellParam1, cellParam2) =>
+                getBankAccount(cellParam1).localeCompare(getBankAccount(cellParam2))
         },
         {
             field: "commissionApplied",
@@ -213,37 +248,20 @@ const SalePage = () => {
             headerName: "Comisión Vendedor",
             width: 250,
             valueFormatter: (params) => `$${parseFloat((params.value || 0)).toFixed(2)}`
-        },
-        {
-            field: "total",
-            headerName: "Total",
-            width: 150,
-            valueFormatter: (params) => `$${parseFloat(params.value || 0).toFixed(2)}`
-        },
-        {
-            field: "paymentType",
-            headerName: "Forma de Pago",
-            width: 200,
-            valueGetter: getPaymentType,
-            sortComparator: (v1, v2, cellParam1, cellParam2) =>
-                getPaymentType(cellParam1).localeCompare(getPaymentType(cellParam2))
-        },
-        {
-            field: "bankAccount",
-            headerName: "Cuenta Banco",
-            width: 200,
-            valueGetter: getBankAccount,
-            sortComparator: (v1, v2, cellParam1, cellParam2) =>
-                getBankAccount(cellParam1).localeCompare(getBankAccount(cellParam2))
         }
+        
     ]
 
     const exportColumns = [
         { label: "Id", key: "id" },
+        { label: "Fecha", key: "date" },
         { label: "Client Final", key: "client" },
         { label: "Distribuidor/Cliente Independiente", key: "buyer" },
         { label: "Vendedor", key: "vendor" },
         { label: "Total Sin Envió", key: "totalProducts" },
+        { label: "Total", key: "total" },
+        { label: "Forma de Pago", key: "paymentType" }, 
+        { label: "Cuenta Banco", key: "bankAccount" }, 
         { label: "Cobrar Envió", key: "hasChargeDelivery" },
         { label: "Costo Envió", key: "deliveryCost" },
         { label: "Distribuidor", key: "distributor" },
@@ -252,11 +270,7 @@ const SalePage = () => {
         { label: "Comisión Nivel 1", key: "level1Commission" },
         { label: "Distribuidor Nivel 2", key: "level2Distributor" },
         { label: "Comisión Nivel 2", key: "level2Commission" },
-        { label: "Comisión Vendedor", key: "vendorCommission" },
-        { label: "Total Pagado", key: "total" },
-        { label: "Forma de Pago", key: "paymentType" },
-        { label: "Banco", key: "bank" },
-        { label: "Cuenta", key: "account" },
+        { label: "Comisión Vendedor", key: "vendorCommission" }, 
         { label: "Calle", key: "address.street" },
         { label: "Numero", key: "address.extNumber" },
         { label: "Interior", key: "address.intRef" },
@@ -270,8 +284,6 @@ const SalePage = () => {
         { label: "Precio", key: "price" },
         { label: "Precio Sugerido", key: "defaultPrice" },
         { label: "Costo", key: "cost" },
-        { label: "Total", key: "total" },
-
     ];
 
     const addFunction = () => {
@@ -489,9 +501,13 @@ const SalePage = () => {
     const handleEditClick = (id) => history.push(`${url}/edit/${id}`)
 
     useEffect(() => {
+        let currDate = new Date();
+        let filterDate = new Date(currDate.setMonth(currDate.getMonth() - 4))
+
         const unsubscribe =
             db.collection("sale")
                 .orderBy("date", "desc")
+                .where('date', '>=', filterDate)
                 .onSnapshot((snapShot) => {
                     let sales = []
                     snapShot.forEach((doc) => {
@@ -666,6 +682,7 @@ const SalePage = () => {
             saleToExport.distributor = distributor ? `${distributor.lastName}, ${distributor.firstName}` : "";
             saleToExport.level1Distributor = level1Distributor ? `${level1Distributor.lastName}, ${level1Distributor.firstName}` : "";
             saleToExport.level2Distributor = level2Distributor ? `${level2Distributor.lastName}, ${level2Distributor.firstName}` : "";
+            saleToExport.date = sale.date.yyyymmdd()
 
             return saleToExport;
         })

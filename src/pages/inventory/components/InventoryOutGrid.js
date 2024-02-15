@@ -12,7 +12,7 @@ const InventoryOutGrid = (props) => {
         { field: "date", headerName: "Fecha", width: 250, type: "date" },
         { field: "inventoryId", headerName: "Clave Compra", width: 250 },
         { field: "saleId", headerName: "Venta", width: 200 },
-        { field: "productName", headerName: "Producto", flex: 1 },
+        { field: "productName", headerName: "Producto", width: 200 },
         { field: "flavour", headerName: "Versión", width: 150 },
         { field: "qty", headerName: "Cantidad", width: 140 }]
 

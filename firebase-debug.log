@@ -1,0 +1,25 @@
+[debug] [2023-06-22T20:06:19.365Z] ----------------------------------------------------------------------
+[debug] [2023-06-22T20:06:19.368Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\dmoreno\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2023-06-22T20:06:19.369Z] CLI Version:   11.30.0
+[debug] [2023-06-22T20:06:19.370Z] Platform:      win32
+[debug] [2023-06-22T20:06:19.370Z] Node Version:  v16.14.2
+[debug] [2023-06-22T20:06:19.377Z] Time:          Thu Jun 22 2023 15:06:19 GMT-0500 (Central Daylight Time)
+[debug] [2023-06-22T20:06:19.378Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-06-22T20:06:19.604Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-06-22T20:06:19.605Z] > authorizing via signed-in user (david.mesm@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\dmoreno\Source\personal\bariatric\bariatric-tpv-pro
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
